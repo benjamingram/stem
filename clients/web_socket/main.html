@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>stem</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-MfvZlkHCEqatNoGiOXveE8FIwMzZg4W85qfrfIFBfYc= sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script type="text/javascript">
+      $(function() {
+          var conn;
+          var log = $("#log");
+
+          function appendLog(msg) {
+              var d = log[0]
+              var doScroll = d.scrollTop == d.scrollHeight - d.clientHeight;
+              msg.appendTo(log)
+              if (doScroll) {
+                  d.scrollTop = d.scrollHeight - d.clientHeight;
+              }
+          }
+
+          if (window["WebSocket"]) {
+              conn = new WebSocket("ws://{{$}}/ws");
+              conn.onclose = function(evt) {
+                  appendLog($("<div><b>Connection closed.</b></div>"))
+              }
+              conn.onmessage = function(evt) {
+                  appendLog($("<div/>").text(evt.data))
+              }
+          } else {
+              appendLog($("<div><b>Your browser does not support WebSockets.</b></div>"))
+          }
+      });
+  </script>
+  <style type="text/css">
+    html, body {
+      height: 100%;
+      background-color: #333;
+      overflow: hidden;
+    }
+
+    header {
+      background-color: #5cb85c;
+      -webkit-box-shadow: inset 0 -2px 5px rgba(0,0,0,.1);
+      box-shadow: inset 0 -2px 5px rgba(0,0,0,.1);
+      text-shadow: 0 1px 3px rgba(0,0,0,.5);
+      color: white;
+      font-size: 1.3em;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+    .sub-title { color: #d9d9d9; font-size: .8em; }
+
+    #log {
+        color: white;
+        margin: 0;
+        padding: 0.5em 0.5em 0.5em 0.5em;
+
+        overflow: auto;
+    }
+  </style>
+</head>
+<body>
+    <header>
+        <span>Stem</span>
+        -
+        <span class="sub-title">WebSocket Viewer</span>
+    </header>
+
+    <div class="fluid">
+      <div id="log"></div>
+    </div>
+</body>
+</html>
