@@ -113,8 +113,22 @@ func (h *Host) homepageHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	data := struct {
+		API           bool
+		APIAddr       string
+		Console       bool
+		WebSocket     bool
+		WebSocketAddr string
+	}{
+		API:           h.hostStatus.API,
+		APIAddr:       h.APIAddr,
+		Console:       h.hostStatus.Console,
+		WebSocket:     h.hostStatus.WebSocket,
+		WebSocketAddr: h.WebSocketAddr,
+	}
+
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	homepageTemplate.Execute(w, h.hostStatus)
+	homepageTemplate.Execute(w, data)
 }
 
 func (h *Host) startAPIHandler(w http.ResponseWriter, r *http.Request) {

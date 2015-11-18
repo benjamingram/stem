@@ -26,7 +26,8 @@
   }
   .sub-title { color: #d9d9d9; font-size: .8em; }
   .panel { width: 200px; margin-left: 20px; }
-  .panel-body { text-align: center; }
+  .panel-body { text-align: center; min-height: 100px; }
+  .panel-body .host-location { display: block; margin-bottom: 10px; }
   </style>
 </head>
 <body>
@@ -46,6 +47,7 @@
           </h3>
         </div>
         <div class="panel-body">
+          <span class="host-location">http://localhost{{ .APIAddr }}</span>
           <a class="btn btn-default" href="api/stop">
             Stop API
             &nbsp;
@@ -60,6 +62,7 @@
           </h3>
         </div>
         <div class="panel-body">
+          <span class="host-location">&nbsp;</span>
           <a class="btn btn-default" href="api/start">
             Start API
             &nbsp;
@@ -78,6 +81,7 @@
           </h3>
         </div>
         <div class="panel-body">
+          <a class="host-location" href="http://localhost{{ .WebSocketAddr }}" target="_blank">http://localhost{{ .WebSocketAddr }}</a>
           <a class="btn btn-default" href="websocket/stop">
             Stop WebSocket
             &nbsp;
@@ -92,6 +96,7 @@
           </h3>
         </div>
         <div class="panel-body">
+          <span class="host-location">&nbsp;</span>
           <a class="btn btn-default" href="websocket/start">
             Start WebSocket
             &nbsp;
@@ -110,6 +115,7 @@
           </h3>
         </div>
         <div class="panel-body">
+          <span class="host-location">&nbsp;</span>
           <a class="btn btn-default" href="console/stop">
             Stop Console
             &nbsp;
@@ -124,6 +130,7 @@
           </h3>
         </div>
         <div class="panel-body">
+          <span class="host-location">&nbsp;</span>
           <a class="btn btn-default" href="console/start">
             Start Console
             &nbsp;
