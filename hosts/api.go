@@ -1,4 +1,4 @@
-package stem
+package hosts
 
 import (
 	"io/ioutil"
@@ -6,6 +6,8 @@ import (
 	"net"
 	"net/http"
 	"sync"
+
+	"github.com/benjamingram/stem"
 )
 
 // API is used to specify configuration for the API Host
@@ -14,7 +16,7 @@ type API struct {
 	waitGroup sync.WaitGroup
 
 	Addr string
-	Hub  *ChannelHub
+	Hub  *stem.ChannelHub
 }
 
 // Start begins listening for new requests

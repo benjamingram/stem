@@ -1,4 +1,4 @@
-package web
+package hosts
 
 import (
 	"log"
@@ -22,7 +22,7 @@ type HostStatus struct {
 type Host struct {
 	console   clients.Console
 	webSocket clients.WebSocketHost
-	api       stem.API
+	api       API
 
 	hub        *stem.ChannelHub
 	hostStatus HostStatus
@@ -34,7 +34,7 @@ type Host struct {
 	WebSocketAddr string
 }
 
-var homepageTemplate = template.Must(template.ParseFiles("web/home.html"))
+var homepageTemplate = template.Must(template.ParseFiles("hosts/launcher.html"))
 
 // Start initiates listening for new requests
 func (h *Host) Start(initialStatus HostStatus) {
@@ -43,7 +43,7 @@ func (h *Host) Start(initialStatus HostStatus) {
 	// Initialize hosts
 	h.console = clients.Console{Hub: &ch}
 	h.webSocket = clients.WebSocketHost{Addr: h.WebSocketAddr, Hub: &ch}
-	h.api = stem.API{Addr: h.APIAddr, Hub: &ch}
+	h.api = API{Addr: h.APIAddr, Hub: &ch}
 
 	// Initialize hosts' states
 	h.syncHostStatuses(initialStatus)

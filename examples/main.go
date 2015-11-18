@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 
-	"github.com/benjamingram/stem/web"
+	"github.com/benjamingram/stem/hosts"
 )
 
 // Command Line Parameters
@@ -20,11 +20,11 @@ var webSocketAddr = flag.String("websocket-addr", ":7766", "web socket service a
 func main() {
 	flag.Parse()
 
-	hostStatus := web.HostStatus{API: *initAPI,
+	hostStatus := hosts.HostStatus{API: *initAPI,
 		Console:   *initConsole,
 		WebSocket: *initWebSocket}
 
-	web := web.Host{Addr: *webAddr,
+	web := hosts.Host{Addr: *webAddr,
 		APIAddr:       *apiAddr,
 		WebSocketAddr: *webSocketAddr}
 
