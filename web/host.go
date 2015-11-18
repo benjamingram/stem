@@ -1,88 +1,88 @@
 package web
 
 import (
+	"github.com/benjamingram/stem"
+	"github.com/benjamingram/stem/clients"
 	"log"
 	"net"
 	"net/http"
-	"stem"
-	"stem/clients"
 	"sync"
 	"text/template"
 )
 
 type HostStatus struct {
-    API bool
-    Console bool
-    WebSocket bool
+	API       bool
+	Console   bool
+	WebSocket bool
 }
 
 type Host struct {
-    console clients.Console
-    webSocket clients.WebSocketHost
-    api stem.API
+	console   clients.Console
+	webSocket clients.WebSocketHost
+	api       stem.API
 
-    hub *stem.ChannelHub
-    hostStatus HostStatus
-    listener net.Listener
-    waitGroup sync.WaitGroup
+	hub        *stem.ChannelHub
+	hostStatus HostStatus
+	listener   net.Listener
+	waitGroup  sync.WaitGroup
 
-	Addr string
-    APIAddr string
-    WebSocketAddr string
+	Addr          string
+	APIAddr       string
+	WebSocketAddr string
 }
 
 var homepageTemplate = template.Must(template.ParseFiles("web/home.html"))
 
 func (h *Host) Start(initialStatus HostStatus) {
-    var ch stem.ChannelHub
+	var ch stem.ChannelHub
 
-    // Initialize hosts
-    h.console = clients.Console { Hub: &ch }
-    h.webSocket = clients.WebSocketHost { Addr: h.WebSocketAddr, Hub: &ch}
-    h.api = stem.API { Addr: h.APIAddr, Hub: &ch }
+	// Initialize hosts
+	h.console = clients.Console{Hub: &ch}
+	h.webSocket = clients.WebSocketHost{Addr: h.WebSocketAddr, Hub: &ch}
+	h.api = stem.API{Addr: h.APIAddr, Hub: &ch}
 
-    // Initialize hosts' states
-    h.syncHostStatuses(initialStatus)
+	// Initialize hosts' states
+	h.syncHostStatuses(initialStatus)
 
-    mux := http.NewServeMux()
+	mux := http.NewServeMux()
 
-		h.mapRoutes(mux)
+	h.mapRoutes(mux)
 
-    log.Println("Web Host Started -", h.Addr)
+	log.Println("Web Host Started -", h.Addr)
 
-    http.ListenAndServe(h.Addr, mux)
+	http.ListenAndServe(h.Addr, mux)
 }
 
-func (h *Host) syncHostStatuses(hs HostStatus){
-    if h.hostStatus.API != hs.API {
-        if hs.API {
-            h.api.Start()
-        } else {
-            h.api.Stop()
-        }
+func (h *Host) syncHostStatuses(hs HostStatus) {
+	if h.hostStatus.API != hs.API {
+		if hs.API {
+			h.api.Start()
+		} else {
+			h.api.Stop()
+		}
 
-        h.hostStatus.API = hs.API
-    }
+		h.hostStatus.API = hs.API
+	}
 
-    if h.hostStatus.Console != hs.Console {
-        if hs.Console {
-            h.console.Start()
-        } else {
-            h.console.Stop()
-        }
+	if h.hostStatus.Console != hs.Console {
+		if hs.Console {
+			h.console.Start()
+		} else {
+			h.console.Stop()
+		}
 
-        h.hostStatus.Console = hs.Console
-    }
+		h.hostStatus.Console = hs.Console
+	}
 
-    if h.hostStatus.WebSocket != hs.WebSocket {
-        if hs.WebSocket {
-            h.webSocket.Start()
-        } else {
-            h.webSocket.Stop()
-        }
+	if h.hostStatus.WebSocket != hs.WebSocket {
+		if hs.WebSocket {
+			h.webSocket.Start()
+		} else {
+			h.webSocket.Stop()
+		}
 
-        h.hostStatus.WebSocket = hs.WebSocket
-    }
+		h.hostStatus.WebSocket = hs.WebSocket
+	}
 }
 
 func (h *Host) mapRoutes(mux *http.ServeMux) {
@@ -99,10 +99,10 @@ func (h *Host) mapRoutes(mux *http.ServeMux) {
 }
 
 func (h *Host) homepageHandler(w http.ResponseWriter, r *http.Request) {
-  if r.URL.Path != "/" {
-    http.Error(w, "Page not found", 404)
+	if r.URL.Path != "/" {
+		http.Error(w, "Page not found", 404)
 		return
-  }
+	}
 
 	if r.Method != "GET" {
 		http.Error(w, "Method not allowed", 405)

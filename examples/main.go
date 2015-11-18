@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"stem/web"
+	"github.com/benjamingram/stem/web"
 )
 
 // Command Line Parameters
