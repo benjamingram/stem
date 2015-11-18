@@ -2,15 +2,18 @@ package clients
 
 import (
 	"fmt"
-	"github.com/benjamingram/stem"
 	"log"
+
+	"github.com/benjamingram/stem"
 )
 
+// Console represents the client that sends output to the console
 type Console struct {
 	Hub     *stem.ChannelHub
 	channel chan string
 }
 
+// Start begins listening for new messages on the Hub
 func (cc *Console) Start() {
 	c := make(chan string)
 	cc.channel = c
@@ -33,6 +36,7 @@ func (cc *Console) Start() {
 	log.Println("Console Client Started")
 }
 
+// Stop ends listening for new messages on the Hub
 func (cc *Console) Stop() {
 	// If the channel is already closed, nothing more to do
 	if cc.channel == nil {

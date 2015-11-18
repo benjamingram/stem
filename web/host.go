@@ -1,21 +1,24 @@
 package web
 
 import (
-	"github.com/benjamingram/stem"
-	"github.com/benjamingram/stem/clients"
 	"log"
 	"net"
 	"net/http"
 	"sync"
 	"text/template"
+
+	"github.com/benjamingram/stem"
+	"github.com/benjamingram/stem/clients"
 )
 
+// HostStatus is used to track hosts that should be running
 type HostStatus struct {
 	API       bool
 	Console   bool
 	WebSocket bool
 }
 
+// Host provides configuration for Host and ClientHosts
 type Host struct {
 	console   clients.Console
 	webSocket clients.WebSocketHost
@@ -33,6 +36,7 @@ type Host struct {
 
 var homepageTemplate = template.Must(template.ParseFiles("web/home.html"))
 
+// Start initiates listening for new requests
 func (h *Host) Start(initialStatus HostStatus) {
 	var ch stem.ChannelHub
 

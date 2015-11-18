@@ -5,11 +5,13 @@ import (
 	"sync"
 )
 
+// ChannelHub is responsible for piping messages to all registered channels
 type ChannelHub struct {
 	sync.RWMutex
 	channels map[*chan string]map[string]struct{}
 }
 
+// SendMessage publishes a message to all matching channels registered to the topic
 func (ch *ChannelHub) SendMessage(message string, topic string) {
 	ch.RLock()
 	defer ch.RUnlock()
@@ -28,6 +30,7 @@ func (ch *ChannelHub) SendMessage(message string, topic string) {
 	}
 }
 
+// RegisterChannel registers the specified channel with the specified topics
 func (ch *ChannelHub) RegisterChannel(channel *chan string, topics []string) (err error) {
 	// Validate params
 	if channel == nil {
@@ -60,6 +63,7 @@ func (ch *ChannelHub) RegisterChannel(channel *chan string, topics []string) (er
 	return nil
 }
 
+// DeregisterChannel removes the channel from the list of channels to write to
 func (ch *ChannelHub) DeregisterChannel(channel *chan string) {
 	ch.Lock()
 	defer ch.Unlock()

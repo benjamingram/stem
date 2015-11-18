@@ -1,19 +1,21 @@
 package clients
 
 import (
-	"github.com/benjamingram/stem"
-	"github.com/benjamingram/stem/clients/web_socket"
 	"log"
 	"net"
 	"net/http"
 	"sync"
 	"text/template"
+
+	"github.com/benjamingram/stem"
+	"github.com/benjamingram/stem/clients/websocket"
 )
 
 var (
-	pageTemplate = template.Must(template.ParseFiles("clients/web_socket/main.html"))
+	pageTemplate = template.Must(template.ParseFiles("clients/websocket/main.html"))
 )
 
+// WebSocketHost is a wrapper http server to host the websocket client UI
 type WebSocketHost struct {
 	listener  net.Listener
 	logger    *log.Logger
@@ -23,10 +25,11 @@ type WebSocketHost struct {
 	Hub  *stem.ChannelHub
 }
 
+// Start the WebSocketHost listening for incoming requests
 func (wh *WebSocketHost) Start() {
 	c := make(chan string)
 
-	var ws web_socket.WebSocket
+	var ws websocket.WebSocket
 
 	wh.Hub.RegisterChannel(&c, []string{"*"})
 
@@ -65,6 +68,7 @@ func (wh *WebSocketHost) Start() {
 	log.Println("Web Socket Host Started -", wh.Addr)
 }
 
+// Stop the WebSocketHost from taking new requests
 func (wh *WebSocketHost) Stop() {
 	if wh.listener == nil {
 		return

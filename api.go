@@ -8,6 +8,7 @@ import (
 	"sync"
 )
 
+// API is used to specify configuration for the API Host
 type API struct {
 	listener  net.Listener
 	waitGroup sync.WaitGroup
@@ -16,6 +17,7 @@ type API struct {
 	Hub  *ChannelHub
 }
 
+// Start begins listening for new requests
 func (api *API) Start() {
 	api.Stop()
 
@@ -40,6 +42,7 @@ func (api *API) Start() {
 	log.Println("API Host Started -", api.Addr)
 }
 
+// Stop ends listening for new requests
 func (api *API) Stop() {
 	if api.listener == nil {
 		return

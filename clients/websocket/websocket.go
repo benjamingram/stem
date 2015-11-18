@@ -1,11 +1,12 @@
-package web_socket
+package websocket
 
 import (
 	"errors"
-	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/gorilla/websocket"
 )
 
 const (
@@ -21,6 +22,7 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
+// WebSocket wraps the implementation socket and provides external functions
 type WebSocket struct {
 	ws *websocket.Conn
 }
@@ -46,6 +48,7 @@ func write(ws *websocket.Conn, mt int, payload []byte) error {
 	return ws.WriteMessage(mt, payload)
 }
 
+// HandleSocket handles new incoming http requests to the socket
 func (s *WebSocket) HandleSocket(w http.ResponseWriter, r *http.Request) {
 	ws, err := upgrader.Upgrade(w, r, nil)
 
