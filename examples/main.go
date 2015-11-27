@@ -17,6 +17,8 @@ var apiAddr = flag.String("api-addr", ":9988", "http api service address")
 var initWebSocket = flag.Bool("websocket", false, "start http web socket service")
 var webSocketAddr = flag.String("websocket-addr", ":7766", "web socket service address")
 
+var secretFile = flag.String("secret-file", "control-panel-secret.json", "secret file for control panel")
+
 func main() {
 	flag.Parse()
 
@@ -28,5 +30,6 @@ func main() {
 		APIAddr:       *apiAddr,
 		WebSocketAddr: *webSocketAddr}
 
+	hosts.LoadSecretsFromFile(*secretFile)
 	web.Start(hostStatus)
 }

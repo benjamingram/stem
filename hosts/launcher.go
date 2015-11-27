@@ -99,6 +99,10 @@ func (h *Host) mapRoutes() http.Handler {
 	r.HandleFunc("/websocket/start", h.startWebSocketHandler)
 	r.HandleFunc("/websocket/stop", h.stopWebSocketHandler)
 
+	r.HandleFunc("/login", loginHandler)
+	r.HandleFunc("/login-oauth", loginOauthHandler)
+	r.HandleFunc("/login-oauth-response", loginOauthResponseHandler)
+
 	r.HandleFunc("/console/start", h.startConsoleHandler)
 	r.HandleFunc("/console/stop", h.stopConsoleHandler)
 
