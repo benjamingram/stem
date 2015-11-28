@@ -9,6 +9,7 @@ import (
 
 	"github.com/benjamingram/stem"
 	"github.com/benjamingram/stem/clients"
+	"github.com/gorilla/mux"
 )
 
 // HostStatus is used to track hosts that should be running
@@ -48,13 +49,11 @@ func (h *Host) Start(initialStatus HostStatus) {
 	// Initialize hosts' states
 	h.syncHostStatuses(initialStatus)
 
-	mux := http.NewServeMux()
-
-	h.mapRoutes(mux)
+	handler := h.mapRoutes()
 
 	log.Println("Web Host Started -", h.Addr)
 
-	http.ListenAndServe(h.Addr, mux)
+	http.ListenAndServe(h.Addr, handler)
 }
 
 func (h *Host) syncHostStatuses(hs HostStatus) {
@@ -89,17 +88,21 @@ func (h *Host) syncHostStatuses(hs HostStatus) {
 	}
 }
 
-func (h *Host) mapRoutes(mux *http.ServeMux) {
-	mux.HandleFunc("/", h.homepageHandler)
+func (h *Host) mapRoutes() http.Handler {
+	r := mux.NewRouter()
 
-	mux.HandleFunc("/api/start", h.startAPIHandler)
-	mux.HandleFunc("/api/stop", h.stopAPIHandler)
+	r.HandleFunc("/", h.homepageHandler)
 
-	mux.HandleFunc("/websocket/start", h.startWebSocketHandler)
-	mux.HandleFunc("/websocket/stop", h.stopWebSocketHandler)
+	r.HandleFunc("/api/start", h.startAPIHandler)
+	r.HandleFunc("/api/stop", h.stopAPIHandler)
 
-	mux.HandleFunc("/console/start", h.startConsoleHandler)
-	mux.HandleFunc("/console/stop", h.stopConsoleHandler)
+	r.HandleFunc("/websocket/start", h.startWebSocketHandler)
+	r.HandleFunc("/websocket/stop", h.stopWebSocketHandler)
+
+	r.HandleFunc("/console/start", h.startConsoleHandler)
+	r.HandleFunc("/console/stop", h.stopConsoleHandler)
+
+	return r
 }
 
 func (h *Host) homepageHandler(w http.ResponseWriter, r *http.Request) {
