@@ -1,18 +1,18 @@
-package stem
+package channel
 
 import (
 	"errors"
 	"sync"
 )
 
-// ChannelHub is responsible for piping messages to all registered channels
-type ChannelHub struct {
+// Hub is responsible for piping messages to all registered channels
+type Hub struct {
 	sync.RWMutex
 	channels map[*chan string]map[string]struct{}
 }
 
 // SendMessage publishes a message to all matching channels registered to the topic
-func (ch *ChannelHub) SendMessage(message string, topic string) {
+func (ch *Hub) SendMessage(message string, topic string) {
 	ch.RLock()
 	defer ch.RUnlock()
 
@@ -31,7 +31,7 @@ func (ch *ChannelHub) SendMessage(message string, topic string) {
 }
 
 // RegisterChannel registers the specified channel with the specified topics
-func (ch *ChannelHub) RegisterChannel(channel *chan string, topics []string) (err error) {
+func (ch *Hub) RegisterChannel(channel *chan string, topics []string) (err error) {
 	// Validate params
 	if channel == nil {
 		return errors.New("no channel specified")
@@ -64,7 +64,7 @@ func (ch *ChannelHub) RegisterChannel(channel *chan string, topics []string) (er
 }
 
 // DeregisterChannel removes the channel from the list of channels to write to
-func (ch *ChannelHub) DeregisterChannel(channel *chan string) {
+func (ch *Hub) DeregisterChannel(channel *chan string) {
 	ch.Lock()
 	defer ch.Unlock()
 

@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/benjamingram/stem"
+	"github.com/benjamingram/stem/channel"
 )
 
 // Console represents the client that sends output to the console
 type Console struct {
-	Hub     *stem.ChannelHub
+	Hub     *channel.Hub
 	channel chan string
 }
 

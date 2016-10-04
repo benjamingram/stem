@@ -1,9 +1,9 @@
-package stem
+package channel
 
 import "testing"
 
 func TestRegisterChannelRequiresChannel(t *testing.T) {
-	var ch ChannelHub
+	var ch Hub
 
 	err := ch.RegisterChannel(nil, []string{"*"})
 
@@ -13,7 +13,7 @@ func TestRegisterChannelRequiresChannel(t *testing.T) {
 }
 
 func TestRegisterChannelRequiresTopic(t *testing.T) {
-	var ch ChannelHub
+	var ch Hub
 
 	c := make(chan string)
 
@@ -25,7 +25,7 @@ func TestRegisterChannelRequiresTopic(t *testing.T) {
 }
 
 func TestSendMessageSendsToRegisteredChannel(t *testing.T) {
-	var ch ChannelHub
+	var ch Hub
 
 	c := make(chan string)
 	ch.RegisterChannel(&c, []string{"*"})
@@ -44,7 +44,7 @@ func TestSendMessageSendsToRegisteredChannel(t *testing.T) {
 }
 
 func TestSendMessageSendsToMatchedTopic(t *testing.T) {
-	var ch ChannelHub
+	var ch Hub
 
 	c := make(chan string)
 	ch.RegisterChannel(&c, []string{"c1"})
@@ -63,7 +63,7 @@ func TestSendMessageSendsToMatchedTopic(t *testing.T) {
 }
 
 func TestSendMessageDoesNotSendToUnmatchedTopic(t *testing.T) {
-	var ch ChannelHub
+	var ch Hub
 
 	c := make(chan string)
 	ch.RegisterChannel(&c, []string{"c3"})
@@ -81,7 +81,7 @@ func TestSendMessageDoesNotSendToUnmatchedTopic(t *testing.T) {
 }
 
 func TestDeregisterChannelRemovesChannelFromReceivingMessages(t *testing.T) {
-	var ch ChannelHub
+	var ch Hub
 
 	c := make(chan string)
 

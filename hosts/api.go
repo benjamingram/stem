@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/benjamingram/stem"
+	"github.com/benjamingram/stem/channel"
 )
 
 // API is used to specify configuration for the API Host
@@ -16,7 +16,7 @@ type API struct {
 	waitGroup sync.WaitGroup
 
 	Addr string
-	Hub  *stem.ChannelHub
+	Hub  *channel.Hub
 }
 
 // Start begins listening for new requests

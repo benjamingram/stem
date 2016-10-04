@@ -12,7 +12,7 @@ $ go get github.com/benjamingram/stem
 ## Run Control panel
 ```
 $ cd `go list -f '{{.Dir}}' github.com/benjamingram/stem`
-$ go run examples/main.go
+$ go run stem.go
 ```
 
 ## Launch Servers

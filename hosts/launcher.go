@@ -7,7 +7,7 @@ import (
 	"sync"
 	"text/template"
 
-	"github.com/benjamingram/stem"
+	"github.com/benjamingram/stem/channel"
 	"github.com/benjamingram/stem/clients"
 	"github.com/gorilla/mux"
 )
@@ -25,7 +25,7 @@ type Host struct {
 	webSocket clients.WebSocketHost
 	api       API
 
-	hub        *stem.ChannelHub
+	hub        *channel.Hub
 	hostStatus HostStatus
 	listener   net.Listener
 	waitGroup  sync.WaitGroup
@@ -39,7 +39,7 @@ var homepageTemplate = template.Must(template.ParseFiles("hosts/launcher.html"))
 
 // Start initiates listening for new requests
 func (h *Host) Start(initialStatus HostStatus) {
-	var ch stem.ChannelHub
+	var ch channel.Hub
 
 	// Initialize hosts
 	h.console = clients.Console{Hub: &ch}

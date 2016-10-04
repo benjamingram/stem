@@ -7,7 +7,7 @@ import (
 	"sync"
 	"text/template"
 
-	"github.com/benjamingram/stem"
+	"github.com/benjamingram/stem/channel"
 	"github.com/benjamingram/stem/clients/websocket"
 )
 
@@ -22,7 +22,7 @@ type WebSocketHost struct {
 	waitGroup sync.WaitGroup
 
 	Addr string
-	Hub  *stem.ChannelHub
+	Hub  *channel.Hub
 }
 
 // Start the WebSocketHost listening for incoming requests
