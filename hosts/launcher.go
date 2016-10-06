@@ -35,7 +35,7 @@ type Host struct {
 	WebSocketAddr string
 }
 
-var homepageTemplate = template.Must(template.ParseFiles("hosts/launcher.html"))
+var homepageTemplate = template.Must(template.New("launcherTemplate").Parse(launcherTemplate))
 
 // Start initiates listening for new requests
 func (h *Host) Start(initialStatus HostStatus) {
@@ -175,3 +175,152 @@ func (h *Host) stopConsoleHandler(w http.ResponseWriter, r *http.Request) {
 	h.syncHostStatuses(s)
 	http.Redirect(w, r, "/", http.StatusFound)
 }
+
+const launcherTemplate = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>stem</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-MfvZlkHCEqatNoGiOXveE8FIwMzZg4W85qfrfIFBfYc= sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <style type="text/css">
+  html, body {
+    height: 100%;
+    background-color: #333;
+  }
+
+  header {
+    background-color: #428bca;
+    -webkit-box-shadow: inset 0 -2px 5px rgba(0,0,0,.1);
+    box-shadow: inset 0 -2px 5px rgba(0,0,0,.1);
+    text-shadow: 0 1px 3px rgba(0,0,0,.5);
+    color: white;
+    font-size: 1.3em;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+  .sub-title { color: #d9d9d9; font-size: .8em; }
+  .panel { width: 200px; margin-left: 20px; }
+  .panel-body { text-align: center; min-height: 100px; }
+  .panel-body .host-location { display: block; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+    <header>
+        <span>Stem</span>
+        -
+        <span class="sub-title">Server Host Control Panel</span>
+    </header>
+
+    <div class="fluid">
+      <div class="panel panel-default pull-left">
+        {{ if .API }}
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            API
+            <span class="label label-success pull-right">Running</span>
+          </h3>
+        </div>
+        <div class="panel-body">
+          <span class="host-location">http://localhost{{ .APIAddr }}</span>
+          <a class="btn btn-default" href="api/stop">
+            Stop API
+            &nbsp;
+            <i class="fa fa-power-off"></i>
+          </a>
+        </div>
+        {{ else }}
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            API
+            <span class="label label-danger pull-right">Stopped</span>
+          </h3>
+        </div>
+        <div class="panel-body">
+          <span class="host-location">&nbsp;</span>
+          <a class="btn btn-default" href="api/start">
+            Start API
+            &nbsp;
+            <i class="fa fa-power-off"></i>
+          </a>
+        </div>
+        {{ end }}
+      </div>
+
+      <div class="panel panel-default pull-left">
+        {{ if .WebSocket }}
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            WebSocket
+            <span class="label label-success pull-right">Running</span>
+          </h3>
+        </div>
+        <div class="panel-body">
+          <a class="host-location" href="http://localhost{{ .WebSocketAddr }}" target="_blank">http://localhost{{ .WebSocketAddr }}</a>
+          <a class="btn btn-default" href="websocket/stop">
+            Stop WebSocket
+            &nbsp;
+            <i class="fa fa-power-off"></i>
+          </a>
+        </div>
+        {{ else }}
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            WebSocket
+            <span class="label label-danger pull-right">Stopped</span>
+          </h3>
+        </div>
+        <div class="panel-body">
+          <span class="host-location">&nbsp;</span>
+          <a class="btn btn-default" href="websocket/start">
+            Start WebSocket
+            &nbsp;
+            <i class="fa fa-power-off"></i>
+          </a>
+        </div>
+        {{ end }}
+      </div>
+
+      <div class="panel panel-default pull-left">
+        {{ if .Console }}
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            Console
+            <span class="label label-success pull-right">Running</span>
+          </h3>
+        </div>
+        <div class="panel-body">
+          <span class="host-location">&nbsp;</span>
+          <a class="btn btn-default" href="console/stop">
+            Stop Console
+            &nbsp;
+            <i class="fa fa-power-off"></i>
+          </a>
+        </div>
+        {{ else }}
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            Console
+            <span class="label label-danger pull-right">Stopped</span>
+          </h3>
+        </div>
+        <div class="panel-body">
+          <span class="host-location">&nbsp;</span>
+          <a class="btn btn-default" href="console/start">
+            Start Console
+            &nbsp;
+            <i class="fa fa-power-off"></i>
+          </a>
+        </div>
+        {{ end }}
+      </div>
+
+    </div>
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha256-Sk3nkD6mLTMOF0EOpNtsIry+s1CsaqQC1rVLTAy+0yc= sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script> -->
+</body>
+</html>
+`
